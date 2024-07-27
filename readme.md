@@ -975,23 +975,23 @@ $ sudo dnf list | grep jenkins -y
 
 Above command will fail as it cannot find jenkins as it's not aware of the path. Let's download a repo file and check it.
 
-> Checks the list of repos in the system
+Checks the list of repos in the system
 
 ls /etc/yum.repos.d
 
-> Download Jenkins repo
+Download Jenkins repo
 
 `curl https://pkg.jenkins.io/redhat-stable/jenkins.repo -o /etc/yum.repos.d/jenkins.repo`
 
-> Check list of repos now.
+Check list of repos now.
 
 `ls /etc/yum.repos.d`
 
-> Now after importing those new repo files you would be able to install Jenkins software
+Now after importing those new repo files you would be able to install Jenkins software
 
 `sudo dnf list | grep jenkins -y`
 
-> We can also install a package using the URL directly.
+We can also install a package using the URL directly.
 
 `sudo dnf install https://pkg.jenkins.io/redhat-stable/jenkins-2.190.2-1.1.noarch.rpm -y`
 
