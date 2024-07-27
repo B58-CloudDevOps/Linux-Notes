@@ -937,23 +937,63 @@ $ cat /etc/sudoers   [ You can see the list of users with sudo access in the sys
 
 In centos linux, packages can be installed in any of the below ways :
 
-    1) YUM  [YUM is the package manager in Centos Linux : YUM handles all the pre-req and co-req packages of the actual package]
-    2) RPM  [RPM Package Manager : Download the package and install it manually. We are responsible for pre-req and co-req packages of the actual package]
+    1) dnf  [dnf is the package manager in Centos Linux : YUM handles all the pre-req and co-req packages of the actual package]
+    2) dnf  [RPM Package Manager : Download the package and install it manually. We are responsible for pre-req and co-req packages of the actual package]
     3) Source Code Based Installation [ Ref: https://www.makeuseof.com/compile-install-software-from-source-linux/ ]
 
 Examples of `yum` usage :
 
-    # yum install packageName -y     [ Installs package ]
-    # yum remove packageName         [ Deletes package ]
-    # yum update packageName         [ Updates package ]
-    # yum list installed             [ Shows the list of installed packages ]
-    # yum update -y                  [ Updates all the installed packages on the server ]
+    # dnf install packageName -y             [ Installs package ]
+    # dnf remove packageName                 [ Deletes package ]
+    # dnf update packageName                 [ Updates package ]
+    # dnf list installed                     [ Shows the list of installed packages ]
+    # dnf list available                     [ Shows the list of available packages for the system that are not installed ]
+    # sudo dnf list all                      [ Shows all the packages that are installed on the system and are available for the system ]
+    # dnf update wget -y                     [ updates a specific package ]
+    # dnf update -y                          [ Updates all the installed packages on the server ]
+    # dnf update --security                  [ Updates only the security packages on the system ]
+    # dnf update releasever=9 --security     [ Update security packages related only to a specific release ]
+    # dnf update releasever=9 --security --exclude=java* [ Updates all the security updates, but not java ] 
+    # rpm -qa |grep packageName              [ Checks if updates are available for a specific or a group of packages ]
+    # dnf update `cat package.txt            [ Update the list of packages from a specific file ( package.txt with packageNames like splunk java jenkins ) ]
+    # dnf info history                       [ check whether the above mentioned packages are installed or not ]
+    # dnf history                            [ Lists all the dnf commands exectued on the system ]
 
 Examples of `rpm` usage : 
+
     # rpm -i packageName.rpm        [ Installs package ]
     # rpm -U packageName.rpm        [ Upgrades package ]
     # rpm -e packageName.rpm        [ Deletes package ]
     # rpm -q packageName.rpm        [ Queries package ] 
+
+
+> How dnf knew that it has to download from which url or location in the internet ?
+
+dnf will refer the repos available under /etc/yum.repos.d/*.repo files and reach out to only those destinations to download the files
+
+$ sudo dnf list | grep jenkins -y
+
+Above command will fail as it cannot find jenkins as it's not aware of the path. Let's download a repo file and check it.
+
+> Checks the list of repos in the system
+
+ls /etc/yum.repos.d
+
+> Download Jenkins repo
+
+`curl https://pkg.jenkins.io/redhat-stable/jenkins.repo -o /etc/yum.repos.d/jenkins.repo`
+
+> Check list of repos now.
+
+`ls /etc/yum.repos.d`
+
+> Now after importing those new repo files you would be able to install Jenkins software
+
+`sudo dnf list | grep jenkins -y`
+
+> We can also install a package using the URL directly.
+
+`sudo dnf install https://pkg.jenkins.io/redhat-stable/jenkins-2.190.2-1.1.noarch.rpm -y`
 
 ### Service Management  
 
